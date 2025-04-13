@@ -255,18 +255,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currTable.itemChanged.connect(self.updateDbItem)
         self.create_ui()
 
-    
+    """
+       Для Даши!!!
+       Это примерная функция обработки изменения выбора в выпадающем списке.
+       Конкретно эта - для таблицы 'Товары', второй столбец.
+       Твоя задача - продублировать её, но с изменениями.
+       Для той же таблицы, но для последнего столбца.
+       Используется в коде на строке 579
+       """
     def comboProductsIdActivated(self, row):
-        """
-           Для Даши!!!
-           Это примерная функция обработки изменения выбора в выпадающем списке.
-           Конкретно эта - для таблицы 'Товары', второй столбец.
-           Твоя задача - продублировать её, но с изменениями.
-           Для той же таблицы, но для последнего столбца.
-           Используется в коде на строке 579
-           """
-        """
-        Пока не доделано, работает криво
         box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
         key: int = 0
         for i in self.dictProductsId:
@@ -274,13 +271,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 key = i
         self.db.update_position(row+1, str(key), self.currTab.objectName(), 1)
         self.connect_db()
-        """
+
         pass
+
     def comboProviderIdActivated(self, row):
-        """
-        Примерное название функции
-        """
+        box: QtWidgets.QComboBox = self.ui.tableProvider.cellWidget(row, 6)
+        key: int = 0
+        for i in self.dictProviderId:
+            if box.currentText() == self.dictProviderId.get(i):
+                key = i
+        self.db.update_position(row+1, str(key), self.currTab.objectName(), 6)
+        self.connect_db()
         pass
+
     def updateDbItem(self, item):
         if self.firstLoadingFlag == True:
             pass
@@ -586,6 +589,8 @@ class MainWindow(QtWidgets.QMainWindow):
             tblTypeWidget.activated.connect(self.comboProductsIdActivated(index))
             # ^ Сигнал, вызывается при выборе чего-то в выпадающем списке во втором столбце
 
+            tblProviderWidget.activated.connect(self.comboProviderIdActivated(index))
+
             tblPrice = QtWidgets.QTableWidgetItem(str(product.price))
             tblPrice.setFlags(flags)
 
@@ -602,10 +607,16 @@ class MainWindow(QtWidgets.QMainWindow):
             for i in self.dictProviderId:
                 tblProviderWidget.addItem(self.dictProviderId.get(i))
             tblProviderWidget.setCurrentIndex(product.provider)
+
+
+            """
             # v Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
-
+            tblProviderWidget = QtWidgets.QComboBox()
+            for i in self.dictProviderId:
+                tblProviderWidget.addItem(self.dictProviderId.get(i))
+            tblProviderWidget.setCurrentIndex(product.provider)
             # ^ Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
-
+            """
             table.setItem(index, 0, tblIdItem)
             table.setCellWidget(index, 1, tblTypeWidget)
             table.setItem(index, 2, tblPrice)

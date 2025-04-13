@@ -47,5 +47,6 @@ class Product:
     dateOfManufacture: str = ""
     expirationDate: int = 0
     provider: int = 0
+    productName: str = ""
 
 
