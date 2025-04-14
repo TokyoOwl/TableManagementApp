@@ -121,8 +121,8 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout(self.tabProducts)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.tableProducts = QTableWidget(self.tabProducts)
-        if (self.tableProducts.columnCount() < 7):
-            self.tableProducts.setColumnCount(7)
+        if (self.tableProducts.columnCount() < 8):
+            self.tableProducts.setColumnCount(8)
         __qtablewidgetitem6 = QTableWidgetItem()
         self.tableProducts.setHorizontalHeaderItem(0, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
@@ -137,6 +137,9 @@ class Ui_MainWindow(object):
         self.tableProducts.setHorizontalHeaderItem(5, __qtablewidgetitem11)
         __qtablewidgetitem12 = QTableWidgetItem()
         self.tableProducts.setHorizontalHeaderItem(6, __qtablewidgetitem12)
+        __qtablewidgetitem20 = QTableWidgetItem()
+        self.tableProducts.setHorizontalHeaderItem(7, __qtablewidgetitem20)
+
         self.tableProducts.setObjectName(u"tableProducts")
 
         self.gridLayout_5.addWidget(self.tableProducts, 0, 0, 1, 1)
@@ -249,6 +252,8 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Срок годности", None))
         ___qtablewidgetitem12 = self.tableProducts.horizontalHeaderItem(6)
         ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Поставщик", None))
+        ___qtablewidgetitem20 = self.tableProducts.horizontalHeaderItem(7)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"Название товара", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabProducts), QCoreApplication.translate("MainWindow", u"Товары", None))
         ___qtablewidgetitem13 = self.tableProviders.horizontalHeaderItem(0)
         ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow",

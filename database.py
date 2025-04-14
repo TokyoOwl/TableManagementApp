@@ -103,8 +103,8 @@ class DataBase:
                                        (classes.year, classes.quarter, classes.revenue, classes.profit))
                     insert_id = r.lastrowid
                 case options.Product:
-                    r = cursor.execute('''INSERT INTO Товары (Тип_товара, Цена, Количество, Дата_изготовления, Срок_годности, Поставщик) VALUES (?, ?, ?, ?, ?, ?)''',
-                                       (classes.typeProduct, classes.price, classes.quantitys, classes.dateOfManufacture, classes.expirationDate, classes.provider))
+                    r = cursor.execute('''INSERT INTO Товары (Тип_товара, Цена, Количество, Дата_изготовления, Срок_годности, Поставщик, Название товара) VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                                       (classes.typeProduct, classes.price, classes.quantitys, classes.dateOfManufacture, classes.expirationDate, classes.provider, classes.productName))
                     insert_id = r.lastrowid
                 case options.TypeProduct:
                     r = cursor.execute('''INSERT INTO Типы_товаров (Наименование_типа) VALUES (?)''',
@@ -179,17 +179,19 @@ class DataBase:
                 case "tabProduct":
                     match col:
                         case 1:
-                            cursor.execute('''UPDATE Тип_товара SET Год = ? WHERE ID = ?''', (int(data), id))
+                            cursor.execute('''UPDATE Товары SET Тип_товара = ? WHERE ID = ?''', (int(data), id))
                         case 2:
-                            cursor.execute('''UPDATE Цена SET Год = ? WHERE ID = ?''', (float(data), id))
+                            cursor.execute('''UPDATE Товары SET Цена = ? WHERE ID = ?''', (float(data), id))
                         case 3:
-                            cursor.execute('''UPDATE Количество SET Год = ? WHERE ID = ?''', (int(data), id))
+                            cursor.execute('''UPDATE Товары SET Количество = ? WHERE ID = ?''', (int(data), id))
                         case 4:
-                            cursor.execute('''UPDATE Дата_изготовления SET Год = ? WHERE ID = ?''', (data, id))
+                            cursor.execute('''UPDATE Товары SET Дата_изготовления = ? WHERE ID = ?''', (data, id))
                         case 5:
-                            cursor.execute('''UPDATE Срок_годности SET Год = ? WHERE ID = ?''', (int(data), id))
+                            cursor.execute('''UPDATE Товары SET Срок_годности = ? WHERE ID = ?''', (int(data), id))
                         case 6:
-                            cursor.execute('''UPDATE Поставщик SET Год = ? WHERE ID = ?''', (int(data), id))
+                            cursor.execute('''UPDATE Товары SET Поставщик = ? WHERE ID = ?''', (int(data), id))
+                        case 7:
+                            cursor.execute('''UPDATE Товары SET Название товара = ? WHERE ID = ?''', (str(data), id))
             # Фиксируем изменение в транзакции
             self.conn.commit()
         except sqlite3.Error as e:

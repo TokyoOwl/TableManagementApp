@@ -238,6 +238,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dictImploeersId = {}
         self.dictProductsId = {}
         self.dictProviderId = {}
+        self.dictProductsName = {}
         self.firstLoadingFlag = True
         self.isEditingFlag = False
         self.wnd: None = None
@@ -264,6 +265,7 @@ class MainWindow(QtWidgets.QMainWindow):
        Используется в коде на строке 579
        """
     def comboProductsIdActivated(self, row):
+        """
         box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
         key: int = 0
         for i in self.dictProductsId:
@@ -271,17 +273,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 key = i
         self.db.update_position(row+1, str(key), self.currTab.objectName(), 1)
         self.connect_db()
-
+        """
         pass
 
     def comboProviderIdActivated(self, row):
-        box: QtWidgets.QComboBox = self.ui.tableProvider.cellWidget(row, 6)
+        """
+        box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 6)
         key: int = 0
         for i in self.dictProviderId:
             if box.currentText() == self.dictProviderId.get(i):
                 key = i
         self.db.update_position(row+1, str(key), self.currTab.objectName(), 6)
         self.connect_db()
+        """
         pass
 
     def updateDbItem(self, item):
@@ -379,6 +383,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.dictProductsId[j.id] = f"{j.typeName}"
         for k in providers:
             self.dictProviderId[k.id] = f"{k.name_provider}"
+        for h in product:
+            self.dictProductsName[h.id] = f"{h.productName}"
         self.ui.tableImploees.setVisible(True)
         self.ui.tableDailySales.setVisible(True)
         self.ui.tableProviders.setVisible(True)
@@ -570,7 +576,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(products))
-        table.setColumnCount(7)
+        table.setColumnCount(8)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
@@ -583,13 +589,12 @@ class MainWindow(QtWidgets.QMainWindow):
             tblTypeWidget = QtWidgets.QComboBox()
             for i in self.dictProductsId:
                 tblTypeWidget.addItem(self.dictProductsId.get(i))
-            tblTypeWidget.setCurrentIndex(product.typeProduct)
+            tblTypeWidget.setCurrentIndex(product.typeProduct-1)
 
             # v Сигнал, вызывается при выборе чего-то в выпадающем списке во втором столбце
             tblTypeWidget.activated.connect(self.comboProductsIdActivated(index))
             # ^ Сигнал, вызывается при выборе чего-то в выпадающем списке во втором столбце
 
-            tblProviderWidget.activated.connect(self.comboProviderIdActivated(index))
 
             tblPrice = QtWidgets.QTableWidgetItem(str(product.price))
             tblPrice.setFlags(flags)
@@ -606,17 +611,15 @@ class MainWindow(QtWidgets.QMainWindow):
             tblProviderWidget = QtWidgets.QComboBox()
             for i in self.dictProviderId:
                 tblProviderWidget.addItem(self.dictProviderId.get(i))
-            tblProviderWidget.setCurrentIndex(product.provider)
+            tblProviderWidget.setCurrentIndex(product.provider-1)
 
-
-            """
             # v Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
-            tblProviderWidget = QtWidgets.QComboBox()
-            for i in self.dictProviderId:
-                tblProviderWidget.addItem(self.dictProviderId.get(i))
-            tblProviderWidget.setCurrentIndex(product.provider)
+            tblProviderWidget.activated.connect(self.comboProviderIdActivated(index))
             # ^ Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
-            """
+
+            tblProductName =  QtWidgets.QTableWidgetItem(str(product.productName))
+            tblProductName.setFlags(flags)
+
             table.setItem(index, 0, tblIdItem)
             table.setCellWidget(index, 1, tblTypeWidget)
             table.setItem(index, 2, tblPrice)
@@ -624,6 +627,7 @@ class MainWindow(QtWidgets.QMainWindow):
             table.setItem(index, 4, tblProductionDate)
             table.setItem(index, 5, tblExpireDate)
             table.setCellWidget(index, 6, tblProviderWidget)
+            table.setItem(index, 7, tblProductName)
         pass
 
     # Формируем таблицу по значениям для дневных продаж
@@ -637,14 +641,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
-        #for index, daily_sale in enumerate(daily_sales):
-        #    self.dictDaySales[index] = daily_sale
         for index, daily_sale in enumerate(daily_sales):
 
             tblIdItem = QtWidgets.QTableWidgetItem(str(daily_sale.id))
             tblIdItem.setFlags(flags)
 
             tblProductIdBox = QtWidgets.QComboBox()
+            for i in self.dictProductsName:
+                tblProductIdBox.addItem(self.dictProductsName.get(i))
+            tblProductIdBox.setCurrentIndex(daily_sale.product - 1)
 
 
             tblEmployeeIdBox = QtWidgets.QComboBox()
