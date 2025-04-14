@@ -256,37 +256,42 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currTable.itemChanged.connect(self.updateDbItem)
         self.create_ui()
 
-    """
-       Для Даши!!!
-       Это примерная функция обработки изменения выбора в выпадающем списке.
-       Конкретно эта - для таблицы 'Товары', второй столбец.
-       Твоя задача - продублировать её, но с изменениями.
-       Для той же таблицы, но для последнего столбца.
-       Используется в коде на строке 579
-       """
-    def comboProductsIdActivated(self, row):
-        """
+    def comboProductsIdActivated(self, indx, row):
         box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
         key: int = 0
         for i in self.dictProductsId:
             if box.currentText() == self.dictProductsId.get(i):
                 key = i
+                break
         self.db.update_position(row+1, str(key), self.currTab.objectName(), 1)
-        self.connect_db()
-        """
-        pass
 
-    def comboProviderIdActivated(self, row):
-        """
+    def comboProviderIdActivated(self, indx, row):
         box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 6)
+        print(box)
         key: int = 0
         for i in self.dictProviderId:
             if box.currentText() == self.dictProviderId.get(i):
                 key = i
+                break
         self.db.update_position(row+1, str(key), self.currTab.objectName(), 6)
-        self.connect_db()
-        """
-        pass
+
+    def comboProductNameActivated(self, indx, row):
+        box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 1)
+        key: int = 0
+        for i in self.dictProductsName:
+            if box.currentText() == self.dictProductsName.get(i):
+                key = i
+                break
+        self.db.update_position(row + 1, str(key), self.currTab.objectName(), 1)
+
+    def comboImploeeActivated(self, indx, row):
+        box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 2)
+        key: int = 0
+        for i in self.dictImploeersId:
+            if box.currentText() == self.dictImploeersId.get(i):
+                key = i
+                break
+        self.db.update_position(row + 1, str(key), self.currTab.objectName(), 2)
 
     def updateDbItem(self, item):
         if self.firstLoadingFlag == True:
@@ -587,13 +592,12 @@ class MainWindow(QtWidgets.QMainWindow):
             tblIdItem.setFlags(flags)
 
             tblTypeWidget = QtWidgets.QComboBox()
+
             for i in self.dictProductsId:
                 tblTypeWidget.addItem(self.dictProductsId.get(i))
-            tblTypeWidget.setCurrentIndex(product.typeProduct-1)
 
-            # v Сигнал, вызывается при выборе чего-то в выпадающем списке во втором столбце
-            tblTypeWidget.activated.connect(self.comboProductsIdActivated(index))
-            # ^ Сигнал, вызывается при выборе чего-то в выпадающем списке во втором столбце
+            tblTypeWidget.setCurrentIndex(product.typeProduct-1)
+            tblTypeWidget.activated.connect(lambda indx, row = index: self.comboProductsIdActivated(indx, row))
 
 
             tblPrice = QtWidgets.QTableWidgetItem(str(product.price))
@@ -609,13 +613,12 @@ class MainWindow(QtWidgets.QMainWindow):
             tblExpireDate.setFlags(flags)
 
             tblProviderWidget = QtWidgets.QComboBox()
+
             for i in self.dictProviderId:
                 tblProviderWidget.addItem(self.dictProviderId.get(i))
-            tblProviderWidget.setCurrentIndex(product.provider-1)
 
-            # v Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
-            tblProviderWidget.activated.connect(self.comboProviderIdActivated(index))
-            # ^ Вот в этом месте надо сделать похожий сигнал и соответственно привязать его к новой функции
+            tblProviderWidget.setCurrentIndex(product.provider-1)
+            tblProviderWidget.activated.connect(lambda indx, row = index: self.comboProviderIdActivated(indx, row))
 
             tblProductName =  QtWidgets.QTableWidgetItem(str(product.productName))
             tblProductName.setFlags(flags)
@@ -650,12 +653,15 @@ class MainWindow(QtWidgets.QMainWindow):
             for i in self.dictProductsName:
                 tblProductIdBox.addItem(self.dictProductsName.get(i))
             tblProductIdBox.setCurrentIndex(daily_sale.product - 1)
+            tblProductIdBox.activated.connect(lambda indx, row = index: self.comboProductNameActivated(indx, row))
 
 
             tblEmployeeIdBox = QtWidgets.QComboBox()
             for i in self.dictImploeersId:
                 tblEmployeeIdBox.addItem(self.dictImploeersId.get(i))
             tblEmployeeIdBox.setCurrentIndex(daily_sale.imploee - 1)
+            tblEmployeeIdBox.activated.connect(lambda indx, row = index: self.comboImploeeActivated(indx, row))
+
             tblCountItem = QtWidgets.QTableWidgetItem(str(daily_sale.quantity))
             tblCountItem.setFlags(flags)
 
