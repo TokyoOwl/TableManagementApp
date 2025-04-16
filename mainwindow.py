@@ -172,37 +172,39 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label)
 
+
         self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.dbPath = QLineEdit(self.centralwidget)
         self.dbPath.setObjectName(u"dbPath")
         self.dbPath.setReadOnly(True)
 
-        self.horizontalLayout.addWidget(self.dbPath)
 
         self.btnOpen = QPushButton(self.centralwidget)
         self.btnOpen.setObjectName(u"btnOpen")
-        self.btnAdd = QPushButton(self.centralwidget)
-        self.btnAdd.setObjectName(u"btnAdd")
-        self.btnDel = QPushButton(self.centralwidget)
-        self.btnDel.setObjectName(u"btnDel")
         icon1 = QIcon()
         icon1.addFile(u":/img/img/open.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnOpen.setIcon(icon1)
+
+        self.horizontalLayout.addWidget(self.dbPath)
         self.horizontalLayout.addWidget(self.btnOpen)
-
-
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.verticalLayout.addWidget(self.btnAdd)
-        self.verticalLayout.addWidget(self.btnDel)
+
         self.btnConnect = QPushButton(self.centralwidget)
         self.btnConnect.setObjectName(u"btnConnect")
         icon2 = QIcon()
         icon2.addFile(u":/img/img/connect.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnConnect.setIcon(icon2)
-
         self.verticalLayout.addWidget(self.btnConnect)
 
+        self.horizontalLayout2 = QHBoxLayout()
+        self.btnAdd = QPushButton(self.centralwidget)
+        self.btnAdd.setObjectName(u"btnAdd")
+        self.btnDel = QPushButton(self.centralwidget)
+        self.btnDel.setObjectName(u"btnDel")
+        self.horizontalLayout2.addWidget(self.btnAdd)
+        self.horizontalLayout2.addWidget(self.btnDel)
+
+        self.verticalLayout.addLayout(self.horizontalLayout2)
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
