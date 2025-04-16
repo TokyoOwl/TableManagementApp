@@ -1,8 +1,10 @@
 import sys
+from wsgiref.validate import validator
 
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QVBoxLayout, QGridLayout, QWidget, QLabel, QTextEdit, QPushButton, QTableWidget
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 from database import *
 from tables import *
 
@@ -123,24 +125,39 @@ class BoxWindow(QtWidgets.QMainWindow):
                             self.gridlayout.addWidget(self.txt1, 1, 1)
                         case 2:
                             lbl = QLabel("Отчество")
+
                             self.gridlayout.addWidget(lbl, 2, 0)
                             self.gridlayout.addWidget(self.txt2, 2, 1)
                         case 3:
                             lbl = QLabel("Дата рождения")
+                            dateTimeEdit1 = QDateTimeEdit()
+                            dateTimeEdit1.setCalendarPopup(True)
+                            dateTimeEdit1.setDisplayFormat("dd.MM.yyyy")
                             self.gridlayout.addWidget(lbl, 3, 0)
-                            self.gridlayout.addWidget(self.txt3, 3, 1)
+                            self.gridlayout.addWidget(dateTimeEdit1, 3, 1)
                         case 4:
-                            lbl = QLabel("Номер пасспорта")
+                            lbl = QLabel("Номер паспорта")
+                            passwordWidget = QLineEdit()
+                            passwordWidget.setPlaceholderText("2215131313")
+                            validator = QRegularExpressionValidator(QRegularExpression("[0-9]{10}"))
+                            passwordWidget.setValidator(validator)
                             self.gridlayout.addWidget(lbl, 4, 0)
-                            self.gridlayout.addWidget(self.txt4, 4, 1)
+                            self.gridlayout.addWidget(passwordWidget, 4, 1)
                         case 5:
                             lbl = QLabel("Телефон")
+                            telephoneWidget = QLineEdit()
+                            telephoneWidget.setPlaceholderText("+79051231313")
+                            validator = QRegularExpressionValidator(QRegularExpression("(\\+[7]{1}[0-9]{10})|([8]{1}[0-9]{10})"))
+                            telephoneWidget.setValidator(validator)
                             self.gridlayout.addWidget(lbl, 5, 0)
-                            self.gridlayout.addWidget(self.txt5, 5, 1)
+                            self.gridlayout.addWidget(telephoneWidget, 5, 1)
                         case 6:
                             lbl = QLabel("Принят")
+                            dateTimeEdit = QDateTimeEdit()
+                            dateTimeEdit.setCalendarPopup(True)
+                            dateTimeEdit.setDisplayFormat("dd.MM.yyyy")
                             self.gridlayout.addWidget(lbl, 6, 0)
-                            self.gridlayout.addWidget(self.txt6, 6, 1)
+                            self.gridlayout.addWidget(dateTimeEdit, 6, 1)
             case "tabProviders":
                 lbl = QLabel("Поставщик")
                 self.gridlayout.addWidget(lbl, 0, 0)
@@ -150,16 +167,24 @@ class BoxWindow(QtWidgets.QMainWindow):
                     match i:
                         case 0:
                             lbl = QLabel("Год")
+                            dateTimeEditt = QDateTimeEdit()
+                            dateTimeEditt.setCalendarPopup(True)
+                            dateTimeEditt.setDisplayFormat("dd.MM.yyyy")
                             self.gridlayout.addWidget(lbl, 0, 0)
-                            self.gridlayout.addWidget(self.txt, 0, 1)
+                            self.gridlayout.addWidget(dateTimeEditt, 0, 1)
                         case 1:
                             lbl = QLabel("Квартал")
+                            spinBox = QSpinBox()
+                            spinBox.setRange(1,4)
                             self.gridlayout.addWidget(lbl, 1, 0)
-                            self.gridlayout.addWidget(self.txt1, 1, 1)
+                            self.gridlayout.addWidget(spinBox, 1, 1)
                         case 2:
                             lbl = QLabel("Выручка")
+                            doubleSpinBox = QDoubleSpinBox()
+                            doubleSpinBox.setRange(0, sys.float_info.max)
+                            # doubleSpinBox.setMaximum()
                             self.gridlayout.addWidget(lbl, 2, 0)
-                            self.gridlayout.addWidget(self.txt2, 2, 1)
+                            self.gridlayout.addWidget(doubleSpinBox, 2, 1)
                         case 3:
                             lbl = QLabel("Чистая прибыль")
                             self.gridlayout.addWidget(lbl, 3, 0)
