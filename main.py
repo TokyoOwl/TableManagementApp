@@ -12,7 +12,7 @@ from mainwindow import Ui_MainWindow
 
 class DelWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, db, currTab, parent):
+    def __init__(self, db, currTab, parent: QtWidgets.QMainWindow):
         super().__init__()
 
         self.currTab = currTab
@@ -25,9 +25,12 @@ class DelWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.container)
         self.layout.addLayout(self.gridlayout)
         self.lbl = QLabel("ID записи для удаления")
-        self.txt = QTextEdit()
+        self.delIdWidget = QLineEdit()
+        self.delIdWidget.setPlaceholderText("0")
+        validatorId = QRegularExpressionValidator(QRegularExpression("\\d*"))
+        self.delIdWidget.setValidator(validatorId)
         self.gridlayout.addWidget(self.lbl, 0, 0)
-        self.gridlayout.addWidget(self.txt, 0, 1)
+        self.gridlayout.addWidget(self.delIdWidget, 0, 1)
         self.delbtn = QPushButton("Удалить запись")
         self.layout.addWidget(self.delbtn)
         self.delbtn.clicked.connect(self.delFromTable)
@@ -35,36 +38,34 @@ class DelWindow(QtWidgets.QMainWindow):
     def delFromTable(self):
         match self.currTab.objectName():
             case "tabDailySales":
-                ds = DaySales(id=int(self.txt.toPlainText()))
+                ds = DaySales(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
             case "tabImploees":
-                ds = Imploee(id=int(self.txt.toPlainText()))
+                ds = Imploee(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
             case "tabProviders":
-                ds = Provider(id=int(self.txt.toPlainText()))
+                ds = Provider(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
             case "tabSalesRes":
-                ds = ResultSaile(id=int(self.txt.toPlainText()))
+                ds = ResultSaile(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
             case "tabProductTypes":
-                ds = TypeProduct(id=int(self.txt.toPlainText()))
+                ds = TypeProduct(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
             case "tabProducts":
-                ds = Product(id=int(self.txt.toPlainText()))
+                ds = Product(id=int(self.delIdWidget.text()))
                 self.db.delete_position(ds)
         self.closeWindow()
     def closeWindow(self):
         self.parent.ui.tabWidget.setEnabled(True)
-        self.parent.connect_db()
         self.close()
     def closeEvent(self, event):
-        self.parent.ui.tabWidget.setEnabled(True)
         self.parent.connect_db()
-        self.close()
+        self.parent.isEditingFlag = False
         event.accept()
 class BoxWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, db, currTab, parent):
+    def __init__(self, db, currTab, parent: QtWidgets.QMainWindow):
         super().__init__()
         self.currTab = currTab
         self.db = db
@@ -81,25 +82,24 @@ class BoxWindow(QtWidgets.QMainWindow):
         self.addBtn = QPushButton("Добавить запись")
         self.layout.addWidget(self.addBtn)
         self.addBtn.clicked.connect(self.addToTable)
-        self.txt = QTextEdit()
-        self.txt1 = QTextEdit()
-        self.txt2 = QTextEdit()
-        self.txt3 = QTextEdit()
-        self.txt4 = QTextEdit()
-        self.txt5 = QTextEdit()
-        self.txt6 = QTextEdit()
         match self.currTab.objectName():
             case "tabDailySales":
                 for i in range(6):
                     match i:
                         case 0:
                             lbl = QLabel("Товар")
+                            self.qComboBoxProduct = QComboBox()
+                            for i in self.parent.dictProductsName:
+                                self.qComboBoxProduct.addItem(self.parent.dictProductsName.get(i))
                             self.gridlayout.addWidget(lbl, 0, 0)
-                            self.gridlayout.addWidget(self.txt, 0, 1)
+                            self.gridlayout.addWidget(self.qComboBoxProduct, 0, 1)
                         case 1:
                             lbl = QLabel("Сотрудник")
+                            self.qComboBoxImploee = QComboBox()
+                            for i in self.parent.dictImploeersId:
+                                self.qComboBoxImploee.addItem(self.parent.dictImploeersId.get(i))
                             self.gridlayout.addWidget(lbl, 1, 0)
-                            self.gridlayout.addWidget(self.txt1, 1, 1)
+                            self.gridlayout.addWidget(self.qComboBoxImploee, 1, 1)
                         case 2:
                             lbl = QLabel("Количество")
                             self.doubleSpinBoxDayliSalesCount = QDoubleSpinBox()
@@ -156,8 +156,8 @@ class BoxWindow(QtWidgets.QMainWindow):
                         case 4:
                             lbl = QLabel("Номер паспорта")
                             self.passwordWidget = QLineEdit()
-                            self.passwordWidget.setPlaceholderText("2215131313")
-                            validator = QRegularExpressionValidator(QRegularExpression("[0-9]{10}"))
+                            self.passwordWidget.setPlaceholderText("2215 131313")
+                            validator = QRegularExpressionValidator(QRegularExpression("[0-9]{4} [0-9]{6}"))
                             self.passwordWidget.setValidator(validator)
                             self.gridlayout.addWidget(lbl, 4, 0)
                             self.gridlayout.addWidget(self.passwordWidget, 4, 1)
@@ -178,16 +178,21 @@ class BoxWindow(QtWidgets.QMainWindow):
                             self.gridlayout.addWidget(self.dateTimeEdit, 6, 1)
             case "tabProviders":
                 lbl = QLabel("Поставщик")
+                self.providerNameWidget = QLineEdit()
+                self.providerNameWidget.setPlaceholderText("СпортТорг")
+                validatorProviderName = QRegularExpressionValidator(QRegularExpression("\\D*"))
+                self.providerNameWidget.setValidator(validatorProviderName)
                 self.gridlayout.addWidget(lbl, 0, 0)
-                self.gridlayout.addWidget(self.txt, 0, 1)
+                self.gridlayout.addWidget(self.providerNameWidget, 0, 1)
             case "tabSalesRes":
                 for i in range(4):
                     match i:
                         case 0:
                             lbl = QLabel("Год")
                             self.dateTimeEditt = QDateTimeEdit()
-                            self.dateTimeEditt.setCalendarPopup(True)
-                            self.dateTimeEditt.setDisplayFormat("dd.MM.yyyy")
+                            #self.dateTimeEditt.setCalendarPopup(True)
+                            self.dateTimeEditt.setCurrentSection(QDateTimeEdit.Section.YearSection)
+                            self.dateTimeEditt.setDisplayFormat("yyyy")
                             self.gridlayout.addWidget(lbl, 0, 0)
                             self.gridlayout.addWidget(self.dateTimeEditt, 0, 1)
                         case 1:
@@ -210,16 +215,22 @@ class BoxWindow(QtWidgets.QMainWindow):
                             self.gridlayout.addWidget(self.doubleSpinBoxPribyl, 3, 1)
             case "tabProductTypes":
                 lbl = QLabel("Наименование типа")
+                self.productTypeWidget = QLineEdit()
+                self.productTypeWidget.setPlaceholderText("Мячи")
+                validatorProductType = QRegularExpressionValidator(QRegularExpression("\\D*"))
+                self.productTypeWidget.setValidator(validatorProductType)
                 self.gridlayout.addWidget(lbl, 0, 0)
-                self.gridlayout.addWidget(self.txt, 0, 1)
+                self.gridlayout.addWidget(self.productTypeWidget, 0, 1)
             case "tabProducts":
-                for i in range(6):
+                for i in range(7):
                     match i:
                         case 0:
                             lbl = QLabel("Тип товара")
-                            self.patronymicWidget1.setPlaceholderText("Лыжи")
+                            self.qComboTypeProduct = QComboBox()
+                            for i in self.parent.dictProductsId:
+                                self.qComboTypeProduct.addItem(self.parent.dictProductsId.get(i))
                             self.gridlayout.addWidget(lbl, 0, 0)
-                            self.gridlayout.addWidget(self.txt, 0, 1)
+                            self.gridlayout.addWidget(self.qComboTypeProduct, 0, 1)
                         case 1:
                             lbl = QLabel("Цена")
                             self.doubleSpinBoxPrice = QDoubleSpinBox()
@@ -248,43 +259,64 @@ class BoxWindow(QtWidgets.QMainWindow):
                             self.gridlayout.addWidget(self.dateTimeEditSrok, 4, 1)
                         case 5:
                             lbl = QLabel("Поставщик")
+                            self.qComboProvider = QComboBox()
+                            for i in self.parent.dictProviderId:
+                                self.qComboProvider.addItem(self.parent.dictProviderId.get(i))
                             self.gridlayout.addWidget(lbl, 5, 0)
-                            self.gridlayout.addWidget(self.txt5, 5, 1)
+                            self.gridlayout.addWidget(self.qComboProvider, 5, 1)
+                        case 6:
+                            lbl = QLabel("Название товара")
+                            self.productNameWidget = QLineEdit()
+                            self.productNameWidget.setPlaceholderText("AdidasProMax League")
+                            self.gridlayout.addWidget(lbl, 6, 0)
+                            self.gridlayout.addWidget(self.productNameWidget, 6, 1)
 
     def addToTable(self):
         match self.currTab.objectName():
             case "tabDailySales":
-                ds = DaySales(product=int(self.txt.toPlainText()), imploee=int(self.txt1.toPlainText()), quantity=int(self.txt2.toPlainText()),
-                              data=self.txt3.toPlainText(), summ=float(self.txt4.toPlainText()))
-                self.db.add_position(ds)
+                productName: list[int] = [i for i in self.parent.dictProductsName if self.parent.dictProductsName.get(i) == self.qComboBoxProduct.currentText()]
+                imploeeId: list[int] = [i for i in self.parent.dictImploeersId if self.parent.dictImploeersId.get(i) == self.qComboBoxImploee.currentText()]
+                if productName[0] is not None and imploeeId[0] is not None:
+                    ds = DaySales(product=productName[0], imploee=imploeeId[0], quantity=int(self.doubleSpinBoxDayliSalesCount.value()),
+                                  data=self.dateTimeEditDayliSales.text(), summ=self.doubleSpinBoxDayliSalesAmount.value())
+                    self.db.add_position(ds)
+                else:
+                    print(f"Error: productName: {productName} or imploeeId: {imploeeId} cannot None")
             case "tabImploees":
-                imp = Imploee(lastName=self.txt.toPlainText(), name=self.txt1.toPlainText(), surName=self.txt2.toPlainText(), wasBorn=self.txt3.toPlainText(),
-                              numberPassport=self.txt4.toPlainText(), telephone=self.txt5.toPlainText(), employment=self.txt6.toPlainText())
+                imp = Imploee(lastName=self.surnameWidget.text(), name=self.nameWidget.text(), surName=self.patronymicWidget.text(), wasBorn=self.dateTimeEdit1.text(),
+                              numberPassport=self.passwordWidget.text(), telephone=self.telephoneWidget.text(), employment=self.dateTimeEdit.text())
                 self.db.add_position(imp)
             case "tabProviders":
-                prv = Provider(name_provider=self.txt.toPlainText())
+                prv = Provider(name_provider=self.providerNameWidget.text())
                 self.db.add_position(prv)
             case "tabSalesRes":
-                slrs = ResultSaile(year=int(self.txt.toPlainText()),quarter=int(self.txt1.toPlainText()),
-                                   revenue=float(self.txt2.toPlainText()), profit=float(self.txt3.toPlainText()))
+                slrs = ResultSaile(year=int(self.dateTimeEditt.text()), quarter=self.spinBox.value(),
+                                   revenue=self.doubleSpinBoxViruchka.value(), profit=self.doubleSpinBoxPribyl.value())
                 self.db.add_position(slrs)
             case "tabProductTypes":
-                prt = TypeProduct(typeName=self.txt.toPlainText())
+                prt = TypeProduct(typeName=self.productTypeWidget.text())
                 self.db.add_position(prt)
             case "tabProducts":
-                prd = Product(typeProduct=int(self.txt.toPlainText()), price=float(self.txt1.toPlainText()),
-                              quantitys=int(self.txt2.toPlainText()), dateOfManufacture=self.txt3.toPlainText(),
-                              provider=int(self.txt4.toPlainText()))
-                self.db.add_position(prd)
+                productId: list[int] = [i for i in self.parent.dictProductsId if
+                                          self.parent.dictProductsId.get(i) == self.qComboTypeProduct.currentText()]
+                providerId: list[int] = [i for i in self.parent.dictProviderId if
+                                        self.parent.dictProviderId.get(i) == self.qComboProvider.currentText()]
+
+                if productId[0] is not None and providerId[0] is not None:
+                    prd = Product(typeProduct=productId[0], price=self.doubleSpinBoxPrice.value(), quantitys=int(self.doubleSpinBoxCount1.value()),
+                                  dateOfManufacture=self.dateTimeEditBorn.text(), provider=providerId[0], productName=self.productNameWidget.text())
+                    self.db.add_position(prd)
+                else:
+                    print(f"Error: productId: {productId} or providerId: {providerId} cannot None")
+
         self.closeWindow()
     def closeWindow(self):
         self.parent.ui.tabWidget.setEnabled(True)
-        self.parent.connect_db()
         self.close()
     def closeEvent(self, event):
-        self.parent.ui.tabWidget.setEnabled(True)
         self.parent.connect_db()
-        self.close()
+        self.parent.isEditingFlag = False
+        self.parent
         event.accept()
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -296,6 +328,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dictProductsName = {}
         self.firstLoadingFlag = True
         self.isEditingFlag = False
+        self.isUpdatingTables = False
         self.wnd: None = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -312,44 +345,56 @@ class MainWindow(QtWidgets.QMainWindow):
         self.create_ui()
 
     def comboProductsIdActivated(self, indx, row):
-        box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
-        key: int = 0
-        for i in self.dictProductsId:
-            if box.currentText() == self.dictProductsId.get(i):
-                key = i
-                break
-        self.db.update_position(row+1, str(key), self.currTab.objectName(), 1)
+        if self.isEditingFlag == True or self.isUpdatingTables == True:
+            pass
+        else:
+            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
+            key: int = 0
+            for i in self.dictProductsId:
+                if box.currentText() == self.dictProductsId.get(i):
+                    key = i
+                    break
+            self.db.update_position(row+1, str(key), self.currTab.objectName(), 1)
 
     def comboProviderIdActivated(self, indx, row):
-        box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 6)
-        print(box)
-        key: int = 0
-        for i in self.dictProviderId:
-            if box.currentText() == self.dictProviderId.get(i):
-                key = i
-                break
-        self.db.update_position(row+1, str(key), self.currTab.objectName(), 6)
+        if self.isEditingFlag == True or self.isUpdatingTables == True:
+            pass
+        else:
+            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 6)
+            print(box)
+            key: int = 0
+            for i in self.dictProviderId:
+                if box.currentText() == self.dictProviderId.get(i):
+                    key = i
+                    break
+            self.db.update_position(row+1, str(key), self.currTab.objectName(), 6)
 
     def comboProductNameActivated(self, indx, row):
-        box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 1)
-        key: int = 0
-        for i in self.dictProductsName:
-            if box.currentText() == self.dictProductsName.get(i):
-                key = i
-                break
-        self.db.update_position(row + 1, str(key), self.currTab.objectName(), 1)
+        if self.isEditingFlag == True or self.isUpdatingTables == True:
+            pass
+        else:
+            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 1)
+            key: int = 0
+            for i in self.dictProductsName:
+                if box.currentText() == self.dictProductsName.get(i):
+                    key = i
+                    break
+            self.db.update_position(row + 1, str(key), self.currTab.objectName(), 1)
 
     def comboImploeeActivated(self, indx, row):
-        box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 2)
-        key: int = 0
-        for i in self.dictImploeersId:
-            if box.currentText() == self.dictImploeersId.get(i):
-                key = i
-                break
-        self.db.update_position(row + 1, str(key), self.currTab.objectName(), 2)
+        if self.isEditingFlag == True or self.isUpdatingTables == True:
+            pass
+        else:
+            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 2)
+            key: int = 0
+            for i in self.dictImploeersId:
+                if box.currentText() == self.dictImploeersId.get(i):
+                    key = i
+                    break
+            self.db.update_position(row + 1, str(key), self.currTab.objectName(), 2)
 
     def updateDbItem(self, item):
-        if self.firstLoadingFlag == True:
+        if self.firstLoadingFlag == True or self.isEditingFlag == True or self.isUpdatingTables == True:
             pass
         else:
             self.currTable.blockSignals(True)
@@ -390,12 +435,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def addZapis(self):
+        self.isEditingFlag = True
         self.wnd = BoxWindow(db=self.db, currTab=self.currTab, parent=self)
         self.wnd.show()
         self.ui.tabWidget.setEnabled(False)
         self.opened_windows.append(self.wnd)
 
     def delZapis(self):
+        self.isEditingFlag = True
         self.wnd = DelWindow(db=self.db, currTab=self.currTab, parent=self)
         self.wnd.show()
         self.ui.tabWidget.setEnabled(False)
@@ -427,6 +474,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Подключаемся к БД
     def connect_db(self):
+        self.isUpdatingTables = True
         # Инициализируем класс для работы с БД
         self.db = DataBase(self.ui.dbPath.text())
 
@@ -458,7 +506,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.create_products_table(product)
         self.create_product_types_table(productype)
         self.create_salesres_table(saleres)
-        self.firstLoadingFlag = False
+        if self.firstLoadingFlag:
+            self.firstLoadingFlag = False
+        self.isUpdatingTables = False
+
 
 
 

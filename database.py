@@ -64,10 +64,11 @@ class DataBase:
             return None,e
         finally:
             self.conn.close()
-        for i in list_read:
-            print("===========")
-            for j in i:
-                print(j)
+        #for i in list_read:
+        #    print("===========")
+        #    for j in i:
+        #        print(j)
+        print("Произошло подключение к базе")
         return list_read, None
 
     def add_position(self, classes: Imploee | Provider | ResultSaile | DaySales | TypeProduct | Product) -> (int, str | None):
@@ -176,7 +177,7 @@ class DataBase:
                             cursor.execute('''UPDATE Результат_продаж SET Выручка = ? WHERE ID = ?''', (float(data), id))
                         case 4:
                             cursor.execute('''UPDATE Результат_продаж SET Чистая_прибыль = ? WHERE ID = ?''', (float(data), id))
-                case "tabProduct":
+                case "tabProducts":
                     match col:
                         case 1:
                             cursor.execute('''UPDATE Товары SET Тип_товара = ? WHERE ID = ?''', (int(data), id))
