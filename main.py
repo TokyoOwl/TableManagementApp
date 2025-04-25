@@ -45,7 +45,10 @@ class DelWindow(QtWidgets.QMainWindow):
         self.parent.isEditingFlag = False
         event.accept()
 class BoxWindow(QtWidgets.QMainWindow):
-
+    """
+    Пока что не работает добавление в таблицу Товары
+    Причины выясню 26.04.25 после пар
+    """
     def __init__(self, db, currTab, parent: QtWidgets.QMainWindow):
         super().__init__()
         self.currTab = currTab
