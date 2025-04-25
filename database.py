@@ -204,30 +204,23 @@ class DataBase:
 
         # Удаляет запись в таблицу.
         # Возвращает ошибку (если есть).
-    def delete_position(self, classes: Imploee | Provider | ResultSaile | DaySales | TypeProduct | Product) -> str | None:
-        options = SimpleNamespace()
-        options.Imploee = Imploee
-        options.DaySales = DaySales
-        options.ResultSaile = ResultSaile
-        options.Provider = Provider
-        options.TypeProduct = TypeProduct
-        options.Product = Product
+    def delete_position(self, index: int, selectedtab) -> str | None:
         try:
             self.conn = sqlite3.connect(self.db_path)
             cursor = self.conn.cursor()
-            match type(classes):
-                case options.Imploee:
-                    cursor.execute('''DELETE FROM Сотрудники WHERE ID = ?''', (classes.id,))
-                case options.DaySales:
-                    cursor.execute('''DELETE FROM Суточные_продажи WHERE ID = ?''', (classes.id,))
-                case options.ResultSaile:
-                    cursor.execute('''DELETE FROM Результат_продаж WHERE ID = ?''', (classes.id,))
-                case options.Provider:
-                    cursor.execute('''DELETE FROM Поставщики WHERE ID = ?''', (classes.id,))
-                case options.TypeProduct:
-                    cursor.execute('''DELETE FROM Типы_товаров WHERE ID = ?''', (classes.id,))
-                case options.Product:
-                    cursor.execute('''DELETE FROM Товары WHERE ID = ?''', (classes.id,))
+            match selectedtab.objectName():
+                case "tabImploees":
+                    cursor.execute('''DELETE FROM Сотрудники WHERE ID = ?''', (index,))
+                case "tabDailySales":
+                    cursor.execute('''DELETE FROM Суточные_продажи WHERE ID = ?''', (index,))
+                case "tabSalesRes":
+                    cursor.execute('''DELETE FROM Результат_продаж WHERE ID = ?''', (index,))
+                case "tabProviders":
+                    cursor.execute('''DELETE FROM Поставщики WHERE ID = ?''', (index,))
+                case "tabProductTypes":
+                    cursor.execute('''DELETE FROM Типы_товаров WHERE ID = ?''', (index,))
+                case "tabProducts":
+                    cursor.execute('''DELETE FROM Товары WHERE ID = ?''', (index,))
             self.conn.commit()
         except sqlite3.Error as e:
             return f"{e}"

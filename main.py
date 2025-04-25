@@ -12,49 +12,30 @@ from mainwindow import Ui_MainWindow
 
 class DelWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, db, currTab, parent: QtWidgets.QMainWindow):
+    def __init__(self, db, currTab, parent: QtWidgets.QMainWindow, index: int):
         super().__init__()
-
+        self.index = index
         self.currTab = currTab
         self.db = db
         self.parent = parent
         self.layout = QVBoxLayout()
-        self.gridlayout = QGridLayout()
+        self.hlayout = QHBoxLayout()
         self.container = QWidget()
         self.container.setLayout(self.layout)
         self.setCentralWidget(self.container)
-        self.layout.addLayout(self.gridlayout)
-        self.lbl = QLabel("ID записи для удаления")
-        self.delIdWidget = QLineEdit()
-        self.delIdWidget.setPlaceholderText("0")
-        validatorId = QRegularExpressionValidator(QRegularExpression("\\d*"))
-        self.delIdWidget.setValidator(validatorId)
-        self.gridlayout.addWidget(self.lbl, 0, 0)
-        self.gridlayout.addWidget(self.delIdWidget, 0, 1)
-        self.delbtn = QPushButton("Удалить запись")
-        self.layout.addWidget(self.delbtn)
-        self.delbtn.clicked.connect(self.delFromTable)
+        self.layout.addLayout(self.hlayout)
+        self.lbl = QLabel("Вы точно хотите удалить запись?")
+        self.hlayout.addWidget(self.lbl)
+        self.yesBtn = QPushButton("Да")
+        self.noBtn = QPushButton("Нет")
+        self.layout.addLayout(self.hlayout)
+        self.hlayout.addWidget(self.yesBtn)
+        self.hlayout.addWidget(self.noBtn)
+        self.yesBtn.clicked.connect(self.delFromTable)
+        self.noBtn.clicked.connect(self.closeWindow)
 
     def delFromTable(self):
-        match self.currTab.objectName():
-            case "tabDailySales":
-                ds = DaySales(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
-            case "tabImploees":
-                ds = Imploee(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
-            case "tabProviders":
-                ds = Provider(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
-            case "tabSalesRes":
-                ds = ResultSaile(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
-            case "tabProductTypes":
-                ds = TypeProduct(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
-            case "tabProducts":
-                ds = Product(id=int(self.delIdWidget.text()))
-                self.db.delete_position(ds)
+        self.parent.db.delete_position(self.index, self.parent.currTab)
         self.closeWindow()
     def closeWindow(self):
         self.parent.ui.tabWidget.setEnabled(True)
@@ -252,9 +233,9 @@ class BoxWindow(QtWidgets.QMainWindow):
                             self.gridlayout.addWidget(self.dateTimeEditBorn, 3, 1)
                         case 4:
                             lbl = QLabel("Срок годности")
-                            self.dateTimeEditSrok = QDateTimeEdit()
-                            self.dateTimeEditSrok.setCalendarPopup(True)
-                            self.dateTimeEditSrok.setDisplayFormat("dd.MM.yyyy")
+                            self.dateTimeEditSrok = QComboBox()
+                            for i in range(1,5):
+                                self.dateTimeEditSrok.addItem(f"{i*6}")
                             self.gridlayout.addWidget(lbl, 4, 0)
                             self.gridlayout.addWidget(self.dateTimeEditSrok, 4, 1)
                         case 5:
@@ -431,8 +412,10 @@ class MainWindow(QtWidgets.QMainWindow):
             case "tabProducts":
                 self.currTable = self.ui.tableProducts
 
-
-
+    def getTableRowId(self):
+        index = self.currTable.currentRow() + 1
+        print(index)
+        return index
 
     def addZapis(self):
         self.isEditingFlag = True
@@ -443,7 +426,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def delZapis(self):
         self.isEditingFlag = True
-        self.wnd = DelWindow(db=self.db, currTab=self.currTab, parent=self)
+        index = self.getTableRowId()
+        self.wnd = DelWindow(db=self.db, currTab=self.currTab, parent=self, index=index)
         self.wnd.show()
         self.ui.tabWidget.setEnabled(False)
         self.opened_windows.append(self.wnd)
@@ -569,7 +553,6 @@ class MainWindow(QtWidgets.QMainWindow):
             # Создаём ячейку для 8-го столбца
             tblEmplDateItem = QtWidgets.QTableWidgetItem(employee.employment)
             tblEmplDateItem.setFlags(flags)
-
             # Добавляем в таблицу
             table.setItem(index, 0, tblIdItem)
             table.setItem(index, 1, tblLastNameItem)
