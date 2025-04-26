@@ -1,6 +1,4 @@
 import sys
-from wsgiref.validate import validator
-
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import *
 from PySide6.QtGui import *
@@ -288,7 +286,7 @@ class BoxWindow(QtWidgets.QMainWindow):
 
                 if productId[0] is not None and providerId[0] is not None:
                     prd = Product(typeProduct=productId[0], price=self.doubleSpinBoxPrice.value(), quantitys=int(self.doubleSpinBoxCount1.value()),
-                                  dateOfManufacture=self.dateTimeEditBorn.text(), provider=providerId[0], productName=self.productNameWidget.text())
+                                  dateOfManufacture=self.dateTimeEditBorn.text(), provider=providerId[0], productName=self.productNameWidget.text(), expirationDate=int(self.dateTimeEditSrok.currentText()))
                     self.db.add_position(prd)
                 else:
                     print(f"Error: productId: {productId} or providerId: {providerId} cannot None")
@@ -430,10 +428,17 @@ class MainWindow(QtWidgets.QMainWindow):
     def delZapis(self):
         self.isEditingFlag = True
         index = self.getTableRowId()
-        self.wnd = DelWindow(db=self.db, currTab=self.currTab, parent=self, index=index)
-        self.wnd.show()
-        self.ui.tabWidget.setEnabled(False)
-        self.opened_windows.append(self.wnd)
+        if index != 0:
+            self.wnd = DelWindow(db=self.db, currTab=self.currTab, parent=self, index=index)
+            self.wnd.show()
+            self.ui.tabWidget.setEnabled(False)
+            self.opened_windows.append(self.wnd)
+        else:
+            err = QDialog()
+            layout = QVBoxLayout()
+            err.setLayout(layout)
+            layout.addWidget(QLabel("Сначала выберите запись для удаления"))
+            err.exec()
     def closeEvent(self, event):
         # Close all opened windows when the main window is closed
         for window in self.opened_windows:

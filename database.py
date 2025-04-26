@@ -104,7 +104,7 @@ class DataBase:
                                        (classes.year, classes.quarter, classes.revenue, classes.profit))
                     insert_id = r.lastrowid
                 case options.Product:
-                    r = cursor.execute('''INSERT INTO Товары (Тип_товара, Цена, Количество, Дата_изготовления, Срок_годности, Поставщик, Название товара) VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                    r = cursor.execute('''INSERT INTO Товары (Тип_товара, Цена, Количество, Дата_изготовления, Срок_годности, Поставщик, 'Название товара') VALUES (?, ?, ?, ?, ?, ?, ?)''',
                                        (classes.typeProduct, classes.price, classes.quantitys, classes.dateOfManufacture, classes.expirationDate, classes.provider, classes.productName))
                     insert_id = r.lastrowid
                 case options.TypeProduct:
