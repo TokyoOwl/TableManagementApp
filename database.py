@@ -198,6 +198,7 @@ class DataBase:
         except sqlite3.Error as e:
             return f"{e}"
         finally:
+            print("Произошло обновление базы")
             self.conn.close()
 
         return None

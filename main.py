@@ -330,7 +330,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.isEditingFlag == True or self.isUpdatingTables == True:
             pass
         else:
-            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 1)
+            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 0)
             key: int = 0
             for i in self.dictProductsId:
                 if box.currentText() == self.dictProductsId.get(i):
@@ -342,7 +342,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.isEditingFlag == True or self.isUpdatingTables == True:
             pass
         else:
-            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 6)
+            box: QtWidgets.QComboBox = self.ui.tableProducts.cellWidget(row, 5)
             print(box)
             key: int = 0
             for i in self.dictProviderId:
@@ -355,7 +355,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.isEditingFlag == True or self.isUpdatingTables == True:
             pass
         else:
-            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 1)
+            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 0)
             key: int = 0
             for i in self.dictProductsName:
                 if box.currentText() == self.dictProductsName.get(i):
@@ -367,7 +367,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.isEditingFlag == True or self.isUpdatingTables == True:
             pass
         else:
-            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 2)
+            box: QtWidgets.QComboBox = self.ui.tableDailySales.cellWidget(row, 1)
             key: int = 0
             for i in self.dictImploeersId:
                 if box.currentText() == self.dictImploeersId.get(i):
@@ -380,8 +380,8 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         else:
             self.currTable.blockSignals(True)
-            self.db.update_position(item.row()+1, item.text(), self.currTab.objectName(), item.column())
-            self.connect_db()
+            self.db.update_position(item.row()+1, item.text(), self.currTab.objectName(), item.column()+1)
+            #self.connect_db()
             self.currTable.blockSignals(False)
 
     def callTab(self):
@@ -523,7 +523,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(employees))
-        table.setColumnCount(8)
+        #table.setColumnCount(7)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
@@ -531,8 +531,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for index, employee in enumerate(employees):
 
             # Создаём ячейку для 1-го столбца
-            tblIdItem = QtWidgets.QTableWidgetItem(str(employee.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(employee.id))
+            #tblIdItem.setFlags(flags)
 
             # Создаём ячейку для 2-го столбца
             tblLastNameItem = QtWidgets.QTableWidgetItem(employee.lastName)
@@ -562,14 +562,14 @@ class MainWindow(QtWidgets.QMainWindow):
             tblEmplDateItem = QtWidgets.QTableWidgetItem(employee.employment)
             tblEmplDateItem.setFlags(flags)
             # Добавляем в таблицу
-            table.setItem(index, 0, tblIdItem)
-            table.setItem(index, 1, tblLastNameItem)
-            table.setItem(index, 2, tblFirstNameItem)
-            table.setItem(index, 3, tblMiddleNameItem)
-            table.setItem(index, 4, tblBirthdaytem)
-            table.setItem(index, 5, tblPassportItem)
-            table.setItem(index, 6, tblPhoneItem)
-            table.setItem(index, 7, tblEmplDateItem)
+            #table.setItem(index, 0, tblIdItem)
+            table.setItem(index, 0, tblLastNameItem)
+            table.setItem(index, 1, tblFirstNameItem)
+            table.setItem(index, 2, tblMiddleNameItem)
+            table.setItem(index, 3, tblBirthdaytem)
+            table.setItem(index, 4, tblPassportItem)
+            table.setItem(index, 5, tblPhoneItem)
+            table.setItem(index, 6, tblEmplDateItem)
 
         pass
     def create_salesres_table(self, sales: list[ResultSaile]):
@@ -578,7 +578,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(sales))
-        table.setColumnCount(5)
+        table.setColumnCount(4)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
@@ -586,8 +586,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for index, sale in enumerate(sales):
 
             # Создаём ячейку для 1-го столбца
-            tblIdItem = QtWidgets.QTableWidgetItem(str(sale.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(sale.id))
+            #tblIdItem.setFlags(flags)
 
             # Создаём ячейку для 2-го столбца
             tblYear = QtWidgets.QTableWidgetItem(str(sale.year))
@@ -606,11 +606,11 @@ class MainWindow(QtWidgets.QMainWindow):
             tblProfit.setFlags(flags)
 
             # Добавляем в таблицу
-            table.setItem(index, 0, tblIdItem)
-            table.setItem(index, 1, tblYear)
-            table.setItem(index, 2, tblQuarter)
-            table.setItem(index, 3, tblRevenue)
-            table.setItem(index, 4, tblProfit)
+            #table.setItem(index, 0, tblIdItem)
+            table.setItem(index, 0, tblYear)
+            table.setItem(index, 1, tblQuarter)
+            table.setItem(index, 2, tblRevenue)
+            table.setItem(index, 3, tblProfit)
 
 
 
@@ -621,7 +621,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(providers))
-        table.setColumnCount(2)
+        table.setColumnCount(1)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
@@ -629,8 +629,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for index, provider in enumerate(providers):
 
             # Создаём ячейку для 1-го столбца
-            tblIdItem = QtWidgets.QTableWidgetItem(str(provider.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(provider.id))
+            #tblIdItem.setFlags(flags)
 
             # Создаём ячейку для 2-го столбца
             tblProviderItem = QtWidgets.QTableWidgetItem(provider.name_provider)
@@ -639,8 +639,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             # Добавляем в таблицу
-            table.setItem(index, 0, tblIdItem)
-            table.setItem(index, 1, tblProviderItem)
+            #table.setItem(index, 0, tblIdItem)
+            table.setItem(index, 0, tblProviderItem)
 
 
         pass
@@ -651,23 +651,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(product_types))
-        table.setColumnCount(2)
+        table.setColumnCount(1)
 
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
 
         for index, product_type in enumerate(product_types):
 
             # Создаём ячейку для 1-го столбца
-            tblIdItem = QtWidgets.QTableWidgetItem(str(product_type.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(product_type.id))
+            #tblIdItem.setFlags(flags)
 
             # Создаём ячейку для 2-го столбца
             tblNameItem = QtWidgets.QTableWidgetItem(product_type.typeName)
             tblNameItem.setFlags(flags)
 
             # Добавляем в таблицу
-            table.setItem(index, 0, tblIdItem)
-            table.setItem(index, 1, tblNameItem)
+            #table.setItem(index, 0, tblIdItem)
+            table.setItem(index, 0, tblNameItem)
 
         pass
 
@@ -678,15 +678,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(products))
-        table.setColumnCount(8)
+        table.setColumnCount(7)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
 
         for index, product in enumerate(products):
 
-            tblIdItem = QtWidgets.QTableWidgetItem(str(product.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(product.id))
+            #tblIdItem.setFlags(flags)
 
             tblTypeWidget = QtWidgets.QComboBox()
 
@@ -720,14 +720,14 @@ class MainWindow(QtWidgets.QMainWindow):
             tblProductName =  QtWidgets.QTableWidgetItem(str(product.productName))
             tblProductName.setFlags(flags)
 
-            table.setItem(index, 0, tblIdItem)
-            table.setCellWidget(index, 1, tblTypeWidget)
-            table.setItem(index, 2, tblPrice)
-            table.setItem(index, 3, tblCount)
-            table.setItem(index, 4, tblProductionDate)
-            table.setItem(index, 5, tblExpireDate)
-            table.setCellWidget(index, 6, tblProviderWidget)
-            table.setItem(index, 7, tblProductName)
+            #table.setItem(index, 0, tblIdItem)
+            table.setCellWidget(index, 0, tblTypeWidget)
+            table.setItem(index, 1, tblPrice)
+            table.setItem(index, 2, tblCount)
+            table.setItem(index, 3, tblProductionDate)
+            table.setItem(index, 4, tblExpireDate)
+            table.setCellWidget(index, 5, tblProviderWidget)
+            table.setItem(index, 6, tblProductName)
         pass
 
     # Формируем таблицу по значениям для дневных продаж
@@ -737,14 +737,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Задаём количество строк и столбцов
         table.setRowCount(len(daily_sales))
-        table.setColumnCount(6)
+        #table.setColumnCount(6)
 
         # Флаги для задания "поведения" отображения ячейки
         flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable | QtCore.Qt.ItemFlag.ItemIsEditable
         for index, daily_sale in enumerate(daily_sales):
 
-            tblIdItem = QtWidgets.QTableWidgetItem(str(daily_sale.id))
-            tblIdItem.setFlags(flags)
+            #tblIdItem = QtWidgets.QTableWidgetItem(str(daily_sale.id))
+            #tblIdItem.setFlags(flags)
 
             tblProductIdBox = QtWidgets.QComboBox()
             for i in self.dictProductsName:
@@ -767,12 +767,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
             tblTotalItem = QtWidgets.QTableWidgetItem(str(daily_sale.summ))
             tblTotalItem.setFlags(flags)
-            table.setItem(index, 0, tblIdItem)
-            table.setCellWidget(index, 1, tblProductIdBox)
-            table.setCellWidget(index, 2, tblEmployeeIdBox)
-            table.setItem(index, 3, tblCountItem)
-            table.setItem(index, 4, tblDateItem)
-            table.setItem(index, 5, tblTotalItem)
+            #table.setItem(index, 0, tblIdItem)
+            table.setCellWidget(index, 0, tblProductIdBox)
+            table.setCellWidget(index, 1, tblEmployeeIdBox)
+            table.setItem(index, 2, tblCountItem)
+            table.setItem(index, 3, tblDateItem)
+            table.setItem(index, 4, tblTotalItem)
         pass
 
 def app() -> int:
