@@ -8,6 +8,7 @@ class Provider(Base):
     __tablename__ = 'Provider'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
     name: Mapped[String] = mapped_column(String, name="Name", unique=True)
+    products: Mapped["Product"] = relationship("Product")
 
 class ResultSale(Base):
     __tablename__ = 'ResultSale'
@@ -28,6 +29,7 @@ class Employee(Base):
     number_passport: Mapped[String] = mapped_column(String, name = "NumberPassport", unique=True)
     phone: Mapped[String] = mapped_column(String, name = "NumberTelephone", unique=True)
     employment: Mapped[String] = mapped_column(String, name = "Employment")
+    day_sales: Mapped["DaySales"] = relationship("DaySales")
 
     @property
     def last_name_and_initials(self) -> str:
@@ -44,19 +46,21 @@ class DaySales(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
     productID: Mapped[int] = mapped_column(Integer, ForeignKey("Product.ID"), name = "Product")
     product: Mapped["Product"] = relationship("Product")
-    employee_ID: Mapped[int] = mapped_column(Integer, ForeignKey("Employee.ID"), name = "Imploee")
+    employee_ID = mapped_column(Integer, ForeignKey("Employee.ID"), name = "Imploee")
     employee: Mapped["Employee"] = relationship("Employee")
     quantity: Mapped[int] = mapped_column(Integer, name = "Quantity")
     data: Mapped[int] = mapped_column(Integer, name = "Data")
     summ: Mapped[float]= mapped_column(Float, name = "Summ")
 
-def __str__(self):
-    return f"[{self.id}] {self.date} | {self.employee.last_name_and_initials} | {self.product.product_name} | {self.quantity} | {self.total:.2f}"
+
+    def __str__(self):
+        return f"[{self.id}] {self.date} | {self.employee.last_name_and_initials} | {self.product.product_name} | {self.quantity} | {self.total:.2f}"
 
 class TypeProduct(Base):
     __tablename__ = 'TypeProduct'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name = "ID")
     typeName: Mapped[String] = mapped_column(String, name = "TypeProduct")
+    products: Mapped["Product"] = relationship("Product")
 
 class Product(Base):
     __tablename__ = 'Product'
@@ -69,15 +73,7 @@ class Product(Base):
     expirationDate: Mapped[int] = mapped_column(Integer, name = "ExpirationDate:")
     provider: Mapped[int] = mapped_column(Integer, ForeignKey("Provider.ID"), name = "Provider")
     productName: Mapped[String] = mapped_column(String, name="ProductName")
-
-
-
-
-
-
-
-
-
+    day_sales: Mapped["DaySales"] = relationship("DaySales")
 
     def __str__(self):
         """Функция для "красивого" отображения при отладке и не только"""

@@ -3,7 +3,7 @@ from sqlalchemy import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, subqueryload
 from orm.orm_engine import DatabaseConnectionParameters, create
-from orm.orm_models import Product, ProductType, DailySale, Employee, Position
+from orm.orm_models import Product, Provider, DailySale, Employee, Position
 
 
 class Base:
