@@ -5,13 +5,13 @@ from sqlalchemy.orm import declarative_base, Mapped, relationship, mapped_column
 Base = declarative_base()
 
 class Provider(Base):
-    __tablename__ = 'Provider'
+    __tablename__ = 'Поставщики'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
-    name: Mapped[String] = mapped_column(String, name="Поставщик", unique=True)
+    name_provider: Mapped[String] = mapped_column(String, name="Поставщик", unique=True)
     products: Mapped["Product"] = relationship("Product", back_populates= "provider")
 
 class ResultSale(Base):
-    __tablename__ = 'ResultSale'
+    __tablename__ = 'Результат_продаж'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
     year: Mapped[int] = mapped_column(Integer, name="Год")
     quarter: Mapped[int] = mapped_column(Integer, name = "Квартал")
@@ -20,16 +20,16 @@ class ResultSale(Base):
 
 
 class Employee(Base):
-    __tablename__ = 'Employee'
+    __tablename__ = 'Сотрудники'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
-    last_name: Mapped[String] = mapped_column(String, name = "Фамилия")
-    first_name: Mapped[String] = mapped_column(String, name="Имя")
-    middle_name: Mapped[String] = mapped_column(String, name = "Отчество")
-    was_born: Mapped[int] = mapped_column(Integer, name = "Дата_рождения")
-    number_passport: Mapped[String] = mapped_column(String, name = "Номер_паспорта", unique=True)
-    phone: Mapped[String] = mapped_column(String, name = "Телефон", unique=True)
+    lastName: Mapped[String] = mapped_column(String, name = "Фамилия")
+    name: Mapped[String] = mapped_column(String, name="Имя")
+    surName: Mapped[String] = mapped_column(String, name = "Отчество")
+    wasBorn: Mapped[int] = mapped_column(Integer, name = "Дата_рождения")
+    numberPassport: Mapped[String] = mapped_column(String, name = "Номер_паспорта", unique=True)
+    telephone: Mapped[String] = mapped_column(String, name = "Телефон", unique=True)
     employment: Mapped[String] = mapped_column(String, name = "Прием_на_работу")
-    day_sales: Mapped["DaySales"] = relationship("Суточные_продажи", back_populates= "Сотрудник")
+    day_sales: Mapped["DaySales"] = relationship("DaySales", back_populates= "employee")
 
     @property
     def last_name_and_initials(self) -> str:
@@ -42,7 +42,7 @@ class Employee(Base):
 
 
 class DaySales(Base):
-    __tablename__ = 'DaySales'
+    __tablename__ = 'Суточные_продажи'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
     productID: Mapped[int] = mapped_column(Integer, ForeignKey("Товары.ID"), name = "Товар")
     product: Mapped["Product"] = relationship("Product", back_populates= "day_sales")
@@ -57,16 +57,16 @@ class DaySales(Base):
         return f"[{self.id}] {self.date} | {self.employee.last_name_and_initials} | {self.product.product_name} | {self.quantity} | {self.total:.2f}"
 
 class TypeProduct(Base):
-    __tablename__ = 'TypeProduct'
+    __tablename__ = 'Типы_товаров'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name = "ID")
     typeName: Mapped[String] = mapped_column(String, name = "Наименование_типа")
     products: Mapped["Product"] = relationship("Product", back_populates="type_product")
 
 class Product(Base):
-    __tablename__ = 'Product'
+    __tablename__ = 'Товары'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name = "ID")
-    type_Product_ID: Mapped[int] = mapped_column(Integer, ForeignKey("Типы_товаров.ID"), name = "Наименование_типа")
-    type_product: Mapped["TypeProduct"] = relationship("Тип_товара", back_populates= "products")
+    type_Product_ID: Mapped[int] = mapped_column(Integer, ForeignKey("Типы_товаров.ID"), name = "Тип_товара")
+    type_product: Mapped["TypeProduct"] = relationship("TypeProduct", back_populates= "products")
     price: Mapped[float] = mapped_column(Float, name = "Цена")
     quantity: Mapped[int] = mapped_column(Integer, name = "Количество")
     dateOfManufacture: Mapped[String] = mapped_column(String, name="Дата_изготовления")

@@ -39,7 +39,7 @@ class Products(Base):
         """Чтение данных из БД"""
         try:
             with Session(self._engine) as session:
-                self.List = session.query(Product).options(subqueryload(Product.type_product)).all()
+                self.List = session.query(Product).options(subqueryload(Product.type_product), subqueryload(Product.provider), subqueryload(Product.day_sales)).all()
                 return self.List
         except SQLAlchemyError as e:
             print(f"Ошибка при чтении продуктов: {e}")
@@ -92,7 +92,7 @@ class ProductTypes(Base):
         """Чтение данных из БД"""
         try:
             with Session(self._engine) as session:
-                self.List = session.query(TypeProduct).all()
+                self.List = session.query(TypeProduct).options(subqueryload(TypeProduct.products)).all()
                 return self.List
         except SQLAlchemyError as e:
             print(f"Ошибка при чтении типов продуктов: {e}")
@@ -190,7 +190,7 @@ class Employees(Base):
         """Чтение данных из БД"""
         try:
             with Session(self._engine) as session:
-                self.List = session.query(Employee).options(subqueryload(Employee.day_sales)).all()
+                self.List = session.query(Employee).all()
                 return self.List
         except SQLAlchemyError as e:
             print(f"Ошибка при чтении сотрудников: {e}")
@@ -228,7 +228,7 @@ class Employees(Base):
             print(f"Ошибка при удалении сотрудника: {e}")
 
 
-class Provider(Base):
+class Providers(Base):
     def add(self, provider: Provider):
         """Добавление данных в БД"""
         try:
@@ -237,16 +237,16 @@ class Provider(Base):
                     session.add(provider)
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при добавлении должности: {e}")
+            print(f"Ошибка при добавлении поставщика: {e}")
 
     def read(self):
         """Чтение данных из БД"""
         try:
             with Session(self._engine) as session:
-                self.List = session.query(Provider).all()
+                self.List = session.query(Provider).options(subqueryload(Provider.products)).all()
                 return self.List
         except SQLAlchemyError as e:
-            print(f"Ошибка при чтении должностей: {e}")
+            print(f"Ошибка при чтении поставщика: {e}")
             return []
 
     def update(self, provider: Provider):
@@ -259,7 +259,7 @@ class Provider(Base):
                     })
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при обновлении должности: {e}")
+            print(f"Ошибка при обновлении поставщика: {e}")
 
     def delete(self, provider: Provider):
         """Удаление данных из БД"""
@@ -272,7 +272,7 @@ class Provider(Base):
                         session.query(Provider).filter(Provider.id == provider.id).delete()
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при удалении должности: {e}")
+            print(f"Ошибка при удалении поставщика: {e}")
 
 
 class ResultSales(Base):
@@ -284,7 +284,7 @@ class ResultSales(Base):
                     session.add(result_sale)
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при добавлении должности: {e}")
+            print(f"Ошибка при добавлении результата продаж: {e}")
 
     def read(self):
         """Чтение данных из БД"""
@@ -293,7 +293,7 @@ class ResultSales(Base):
                 self.List = session.query(ResultSale).all()
                 return self.List
         except SQLAlchemyError as e:
-            print(f"Ошибка при чтении должностей: {e}")
+            print(f"Ошибка при чтении результата продаж: {e}")
             return []
 
     def update(self, result_sale: ResultSale):
@@ -309,7 +309,7 @@ class ResultSales(Base):
                     })
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при обновлении должности: {e}")
+            print(f"Ошибка при обновлении результата продаж: {e}")
 
     def delete(self, result_sale: ResultSale):
         """Удаление данных из БД"""
@@ -322,17 +322,16 @@ class ResultSales(Base):
                         session.query(ResultSale).filter(ResultSale.id == result_sale.id).delete()
                     session.commit()
         except SQLAlchemyError as e:
-            print(f"Ошибка при удалении должности: {e}")
+            print(f"Ошибка при удалении результата продаж: {e}")
 
 
 class Service:
     def __init__(self, params: DatabaseConnectionParameters):
         self.params = params
         self._engine = create(params)
-
         self.Products = Products(self._engine)
         self.ProductTypes = ProductTypes(self._engine)
         self.DailySales = DailySales(self._engine)
         self.Employees = Employees(self._engine)
         self.ResultSales = ResultSales(self._engine)
-        self.Provider = Provider(self._engine)
+        self.Provider = Providers(self._engine)

@@ -3,6 +3,7 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from orm import orm_service, orm_engine
 from database import *
 from tables import *
 
@@ -468,15 +469,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def connect_db(self):
         self.isUpdatingTables = True
         # Инициализируем класс для работы с БД
-        self.db = DataBase(self.ui.dbPath.text())
-
+        #self.db = DataBase(self.ui.dbPath.text())s
+        dbParam = orm_engine.DatabaseConnectionParameters(orm_engine.DatabaseType.SQLite, Database=self.ui.dbPath.text())
+        self.db = orm_service.Service(dbParam)
         # Читаем из таблицы сотрудников
-        res_list, error = self.db.read_positions()
-        imploeers, providers, saleres, daysale, productype, product = res_list
-        if error is not None:
-            self.ui.tabWidget.setEnabled(False)
-            self.show_error_message(self, error)
-            return
+        #res_list, error = self.db.read_positions()
+        imploeers, providers, saleres, daysale, productype, product = self.db.Employees.read(), self.db.Provider.read(), self.db.ResultSales.read(), self.db.DailySales.read(), self.db.ProductTypes.read(), self.db.Products.read()
+        #if error is not None:
+        #    self.ui.tabWidget.setEnabled(False)
+        #    self.show_error_message(self, error)
+        #    return
         for i in imploeers:
             self.dictImploeersId[i.id] = f"{i.lastName} {i.name[0]}."
         for j in productype:
