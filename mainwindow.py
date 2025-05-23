@@ -10,13 +10,15 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QHeaderVi
     QPushButton, QSizePolicy, QStatusBar, QTabWidget,
     QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QDialog)
 import mainwindow_rc
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(759, 401)
         icon = QIcon()
-        icon.addFile(u":/img/img/database.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/img/database.ico", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -182,7 +184,7 @@ class Ui_MainWindow(object):
         self.btnOpen = QPushButton(self.centralwidget)
         self.btnOpen.setObjectName(u"btnOpen")
         icon1 = QIcon()
-        icon1.addFile(u":/img/img/open.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/img/open.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnOpen.setIcon(icon1)
 
         self.horizontalLayout.addWidget(self.dbPath)
@@ -192,15 +194,21 @@ class Ui_MainWindow(object):
         self.btnConnect = QPushButton(self.centralwidget)
         self.btnConnect.setObjectName(u"btnConnect")
         icon2 = QIcon()
-        icon2.addFile(u":/img/img/connect.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon2.addFile(u":/img/connect.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnConnect.setIcon(icon2)
         self.verticalLayout.addWidget(self.btnConnect)
 
         self.horizontalLayout2 = QHBoxLayout()
         self.btnAdd = QPushButton(self.centralwidget)
         self.btnAdd.setObjectName(u"btnAdd")
+        icon3 = QIcon()
+        icon3.addFile(u":/img/add.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAdd.setIcon(icon3)
         self.btnDel = QPushButton(self.centralwidget)
         self.btnDel.setObjectName(u"btnDel")
+        icon4 = QIcon()
+        icon4.addFile(u":/img/del.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDel.setIcon(icon4)
         self.horizontalLayout2.addWidget(self.btnAdd)
         self.horizontalLayout2.addWidget(self.btnDel)
 

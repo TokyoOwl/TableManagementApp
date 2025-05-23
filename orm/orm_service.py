@@ -68,7 +68,7 @@ class Products(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if product is not Product:
+                    if not isinstance(product, Product):
                         session.query(Product).delete()
                     else:
                         session.query(Product).filter(Product.id == product.id).delete()
@@ -115,7 +115,7 @@ class ProductTypes(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if product_type is not TypeProduct:
+                    if not isinstance(product_type, TypeProduct):
                         session.query(TypeProduct).delete()
                     else:
                         session.query(TypeProduct).filter(TypeProduct.id == product_type.id).delete()
@@ -166,7 +166,7 @@ class DailySales(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if daily_sale is not DaySales:
+                    if not isinstance(daily_sale, DaySales):
                         session.query(DaySales).delete()
                     else:
                         session.query(DaySales).filter(DaySales.id == daily_sale.id).delete()
@@ -202,12 +202,12 @@ class Employees(Base):
             with Session(self._engine) as session:
                 with session.begin():
                     session.query(Employee).filter(Employee.id == employee.id).update({
-                        Employee.last_name: employee.last_name,
-                        Employee.first_name: employee.first_name,
-                        Employee.middle_name: employee.middle_name,
-                        Employee.was_born: employee.was_born,
-                        Employee.number_passport: employee.number_passport,
-                        Employee.phone: employee.phone,
+                        Employee.lastName: employee.lastName,
+                        Employee.name: employee.name,
+                        Employee.surName: employee.surName,
+                        Employee.wasBorn: employee.wasBorn,
+                        Employee.numberPassport: employee.numberPassport,
+                        Employee.telephone: employee.telephone,
                         Employee.employment: employee.employment
                     })
                     session.commit()
@@ -219,7 +219,7 @@ class Employees(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if employee is not Employee:
+                    if not isinstance(employee, Employee):
                         session.query(Employee).delete()
                     else:
                         session.query(Employee).filter(Employee.id == employee.id).delete()
@@ -266,7 +266,7 @@ class Providers(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if provider is not Provider:
+                    if not isinstance(provider, Provider):
                         session.query(Provider).delete()
                     else:
                         session.query(Provider).filter(Provider.id == provider.id).delete()
@@ -316,7 +316,7 @@ class ResultSales(Base):
         try:
             with Session(self._engine) as session:
                 with session.begin():
-                    if result_sale is not ResultSale:
+                    if not isinstance(result_sale, ResultSale):
                         session.query(ResultSale).delete()
                     else:
                         session.query(ResultSale).filter(ResultSale.id == result_sale.id).delete()
@@ -334,4 +334,4 @@ class Service:
         self.DailySales = DailySales(self._engine)
         self.Employees = Employees(self._engine)
         self.ResultSales = ResultSales(self._engine)
-        self.Provider = Providers(self._engine)
+        self.Providers = Providers(self._engine)

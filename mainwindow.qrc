@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/connect.png</file>
+        <file>img/open.png</file>
+        <file>img/database.ico</file>
+        <file>img/del.png</file>
+        <file>img/add.png</file>
+    </qresource>
+</RCC>

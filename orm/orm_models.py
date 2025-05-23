@@ -7,7 +7,7 @@ Base = declarative_base()
 class Provider(Base):
     __tablename__ = 'Поставщики'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
-    name_provider: Mapped[String] = mapped_column(String, name="Поставщик", unique=True)
+    name_provider: Mapped[str] = mapped_column(String, name="Поставщик", unique=True)
     products: Mapped["Product"] = relationship("Product", back_populates= "provider")
 
 class ResultSale(Base):
@@ -22,13 +22,13 @@ class ResultSale(Base):
 class Employee(Base):
     __tablename__ = 'Сотрудники'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name="ID")
-    lastName: Mapped[String] = mapped_column(String, name = "Фамилия")
-    name: Mapped[String] = mapped_column(String, name="Имя")
-    surName: Mapped[String] = mapped_column(String, name = "Отчество")
-    wasBorn: Mapped[int] = mapped_column(Integer, name = "Дата_рождения")
-    numberPassport: Mapped[String] = mapped_column(String, name = "Номер_паспорта", unique=True)
-    telephone: Mapped[String] = mapped_column(String, name = "Телефон", unique=True)
-    employment: Mapped[String] = mapped_column(String, name = "Прием_на_работу")
+    lastName: Mapped[str] = mapped_column(String, name = "Фамилия")
+    name: Mapped[str] = mapped_column(String, name="Имя")
+    surName: Mapped[str] = mapped_column(String, name = "Отчество")
+    wasBorn: Mapped[str] = mapped_column(String, name = "Дата_рождения")
+    numberPassport: Mapped[str] = mapped_column(String, name = "Номер_паспорта")
+    telephone: Mapped[str] = mapped_column(String, name = "Телефон", unique=True)
+    employment: Mapped[str] = mapped_column(String, name = "Прием_на_работу")
     day_sales: Mapped["DaySales"] = relationship("DaySales", back_populates= "employee")
 
     @property
@@ -49,7 +49,7 @@ class DaySales(Base):
     employee_ID = mapped_column(Integer, ForeignKey("Сотрудники.ID"), name = "Сотрудник")
     employee: Mapped["Employee"] = relationship("Employee", back_populates= "day_sales")
     quantity: Mapped[int] = mapped_column(Integer, name = "Количество")
-    data: Mapped[int] = mapped_column(Integer, name = "Дата")
+    data: Mapped[str] = mapped_column(String, name = "Дата")
     summ: Mapped[float]= mapped_column(Float, name = "Сумма")
 
 
@@ -59,7 +59,7 @@ class DaySales(Base):
 class TypeProduct(Base):
     __tablename__ = 'Типы_товаров'
     id: Mapped[int] = mapped_column(Integer, primary_key=True, name = "ID")
-    typeName: Mapped[String] = mapped_column(String, name = "Наименование_типа")
+    typeName: Mapped[str] = mapped_column(String, name = "Наименование_типа")
     products: Mapped["Product"] = relationship("Product", back_populates="type_product")
 
 class Product(Base):
@@ -69,11 +69,11 @@ class Product(Base):
     type_product: Mapped["TypeProduct"] = relationship("TypeProduct", back_populates= "products")
     price: Mapped[float] = mapped_column(Float, name = "Цена")
     quantity: Mapped[int] = mapped_column(Integer, name = "Количество")
-    dateOfManufacture: Mapped[String] = mapped_column(String, name="Дата_изготовления")
+    dateOfManufacture: Mapped[str] = mapped_column(String, name="Дата_изготовления")
     expirationDate: Mapped[int] = mapped_column(Integer, name = "Срок_годности")
     providerID: Mapped[int] = mapped_column(Integer, ForeignKey("Поставщики.ID"), name = "Поставщик")
     provider: Mapped["Provider"] = relationship("Provider", back_populates="products")
-    productName: Mapped[String] = mapped_column(String, name="Название товара")
+    productName: Mapped[str] = mapped_column(String, name="Название товара")
     day_sales: Mapped["DaySales"] = relationship("DaySales", back_populates= "product")
 
     def __str__(self):
