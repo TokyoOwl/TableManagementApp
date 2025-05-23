@@ -58,7 +58,7 @@ def build_executable(script_name, exe_name, output_dir = "dist", build_dir = "bu
 def main():
     os.chdir(os.path.dirname(os.getcwd()))
     script_name = "main.py"
-    exe_name = "TableManagementPy"
+    exe_name = "SportProductsShopPy"
     output_dir = "bin"
     build_dir = "build"
     icon_path = os.path.join("img", "database.ico")
