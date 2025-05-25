@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043a \u0411\u0414", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Магазин спортивных товаров", None))
         #___qtablewidgetitem = self.tableDailySales.horizontalHeaderItem(0)
         #___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"ID", None))
         ___qtablewidgetitem1 = self.tableDailySales.horizontalHeaderItem(0)
