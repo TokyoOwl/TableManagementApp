@@ -656,6 +656,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def connect_db(self):
         if self.ui.dbPath.text() != "":
             self.isUpdatingTables = True
+            self.ui.btnAdd.setEnabled(True)
+            self.ui.btnDel.setEnabled(True)
             # Инициализируем класс для работы с БД
             #self.db = DataBase(self.ui.dbPath.text())s
             dbParam = orm_engine.DatabaseConnectionParameters(orm_engine.DatabaseType.SQLite, Database=self.ui.dbPath.text())

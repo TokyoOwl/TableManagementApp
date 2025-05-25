@@ -183,6 +183,7 @@ class Ui_MainWindow(object):
 
         self.btnOpen = QPushButton(self.centralwidget)
         self.btnOpen.setObjectName(u"btnOpen")
+
         icon1 = QIcon()
         icon1.addFile(u":/img/open.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnOpen.setIcon(icon1)
@@ -201,11 +202,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout2 = QHBoxLayout()
         self.btnAdd = QPushButton(self.centralwidget)
         self.btnAdd.setObjectName(u"btnAdd")
+        self.btnAdd.setEnabled(False)
         icon3 = QIcon()
         icon3.addFile(u":/img/add.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnAdd.setIcon(icon3)
         self.btnDel = QPushButton(self.centralwidget)
         self.btnDel.setObjectName(u"btnDel")
+        self.btnDel.setEnabled(False)
         icon4 = QIcon()
         icon4.addFile(u":/img/del.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnDel.setIcon(icon4)
