@@ -654,35 +654,43 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Подключаемся к БД
     def connect_db(self):
-        self.isUpdatingTables = True
-        # Инициализируем класс для работы с БД
-        #self.db = DataBase(self.ui.dbPath.text())s
-        dbParam = orm_engine.DatabaseConnectionParameters(orm_engine.DatabaseType.SQLite, Database=self.ui.dbPath.text())
-        self.db = orm_service.Service(dbParam)
-        # Читаем из таблицы сотрудников
-        #res_list, error = self.db.read_positions()
-        imploeers, providers, saleres, daysale, productype, product = self.db.Employees.read(), self.db.Providers.read(), self.db.ResultSales.read(), self.db.DailySales.read(), self.db.ProductTypes.read(), self.db.Products.read()
-        #if error is not None:
-        #    self.ui.tabWidget.setEnabled(False)
-        #    self.show_error_message(self, error)
-        #    return
-        self.updateDicts()
-        self.ui.tableImploees.setVisible(True)
-        self.ui.tableDailySales.setVisible(True)
-        self.ui.tableProviders.setVisible(True)
-        self.ui.tableProducts.setVisible(True)
-        self.ui.tableProductTypes.setVisible(True)
-        self.ui.tableSalesRes.setVisible(True)
-        self.ui.tabWidget.setEnabled(True)
-        self.create_imploees_table(imploeers)
-        self.create_daily_sales_table(daysale)
-        self.create_providers_table(providers)
-        self.create_products_table(product)
-        self.create_product_types_table(productype)
-        self.create_salesres_table(saleres)
-        if self.firstLoadingFlag:
-            self.firstLoadingFlag = False
-        self.isUpdatingTables = False
+        if self.ui.dbPath.text() != "":
+            self.isUpdatingTables = True
+            # Инициализируем класс для работы с БД
+            #self.db = DataBase(self.ui.dbPath.text())s
+            dbParam = orm_engine.DatabaseConnectionParameters(orm_engine.DatabaseType.SQLite, Database=self.ui.dbPath.text())
+            self.db = orm_service.Service(dbParam)
+            # Читаем из таблицы сотрудников
+            #res_list, error = self.db.read_positions()
+            imploeers, providers, saleres, daysale, productype, product = self.db.Employees.read(), self.db.Providers.read(), self.db.ResultSales.read(), self.db.DailySales.read(), self.db.ProductTypes.read(), self.db.Products.read()
+            #if error is not None:
+            #    self.ui.tabWidget.setEnabled(False)
+            #    self.show_error_message(self, error)
+            #    return
+            self.updateDicts()
+            self.ui.tableImploees.setVisible(True)
+            self.ui.tableDailySales.setVisible(True)
+            self.ui.tableProviders.setVisible(True)
+            self.ui.tableProducts.setVisible(True)
+            self.ui.tableProductTypes.setVisible(True)
+            self.ui.tableSalesRes.setVisible(True)
+            self.ui.tabWidget.setEnabled(True)
+            self.create_imploees_table(imploeers)
+            self.create_daily_sales_table(daysale)
+            self.create_providers_table(providers)
+            self.create_products_table(product)
+            self.create_product_types_table(productype)
+            self.create_salesres_table(saleres)
+            if self.firstLoadingFlag:
+                self.firstLoadingFlag = False
+            self.isUpdatingTables = False
+        else:
+            dlg = QDialog(self)
+            layout = QVBoxLayout()
+            layout.addWidget(QLabel("Сначала выберите путь к БД"))
+            dlg.setLayout(layout)
+            dlg.setWindowTitle("Ошибка")
+            dlg.show()
 
 
 
