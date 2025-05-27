@@ -61,10 +61,6 @@ class DelWindow(QtWidgets.QMainWindow):
         self.parent.isEditingFlag = False
         event.accept()
 class BoxWindow(QtWidgets.QMainWindow):
-    """
-    Пока что не работает добавление в таблицу Товары
-    Причины выясню 26.04.25 после пар
-    """
     def __init__(self, currTab, parent: QtWidgets.QMainWindow):
         super().__init__()
         self.setWindowTitle("Добавление записи")
@@ -282,8 +278,10 @@ class BoxWindow(QtWidgets.QMainWindow):
                 else:
                     print(f"Error: productName: {productName} or imploeeId: {imploeeId} cannot be None")
             case "tabImploees":
-                self.parent.db.Employees.add(Employee(lastName=self.surnameWidget.text(), name=self.nameWidget.text(), surName=self.patronymicWidget.text(), wasBorn=self.dateTimeEdit1.text(),
-                              numberPassport=self.passwordWidget.text(), telephone=self.telephoneWidget.text(), employment=self.dateTimeEdit.text()))
+                self.parent.db.Employees.add(Employee(lastName=self.surnameWidget.text(), name=self.nameWidget.text(),
+                                                      surName=self.patronymicWidget.text(), wasBorn=self.dateTimeEdit1.text(),
+                                                      numberPassport=self.passwordWidget.text(), telephone=self.telephoneWidget.text(),
+                                                      employment=self.dateTimeEdit.text()))
             case "tabProviders":
                 self.parent.db.Providers.add(Provider(name_provider=self.providerNameWidget.text()))
             case "tabSalesRes":
@@ -298,8 +296,10 @@ class BoxWindow(QtWidgets.QMainWindow):
                                         self.parent.dictProviderId.get(i) == self.qComboProvider.currentText()]
 
                 if productId[0] is not None and providerId[0] is not None:
-                    self.parent.db.Products.add(Product(type_Product_ID=productId[0], price=self.doubleSpinBoxPrice.value(), quantity=int(self.doubleSpinBoxCount1.value()),
-                                  dateOfManufacture=self.dateTimeEditBorn.text(), providerID=providerId[0], productName=self.productNameWidget.text(), expirationDate=int(self.dateTimeEditSrok.currentText())))
+                    self.parent.db.Products.add(Product(type_Product_ID=productId[0], price=self.doubleSpinBoxPrice.value(),
+                                                        quantity=int(self.doubleSpinBoxCount1.value()),
+                                                        dateOfManufacture=self.dateTimeEditBorn.text(), providerID=providerId[0],
+                                                        productName=self.productNameWidget.text(), expirationDate=int(self.dateTimeEditSrok.currentText())))
                 else:
                     print(f"Error: productId: {productId} or providerId: {providerId} cannot None")
 
