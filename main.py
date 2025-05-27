@@ -17,7 +17,9 @@ class DelWindow(QtWidgets.QMainWindow):
 
     def __init__(self, currTab, parent: QtWidgets.QMainWindow, item: Employee | Provider | DaySales | ResultSale | TypeProduct | Product):
         super().__init__()
+        self.setWindowTitle("Удаление записи")
         self.item = item
+
         self.currTab = currTab
         self.parent = parent
         self.layout = QVBoxLayout()
@@ -65,6 +67,7 @@ class BoxWindow(QtWidgets.QMainWindow):
     """
     def __init__(self, currTab, parent: QtWidgets.QMainWindow):
         super().__init__()
+        self.setWindowTitle("Добавление записи")
         self.currTab = currTab
         self.parent = parent
         self.layout = QVBoxLayout()
@@ -664,7 +667,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.db = orm_service.Service(dbParam)
             # Читаем из таблицы сотрудников
             #res_list, error = self.db.read_positions()
-            imploeers, providers, saleres, daysale, productype, product = self.db.Employees.read(), self.db.Providers.read(), self.db.ResultSales.read(), self.db.DailySales.read(), self.db.ProductTypes.read(), self.db.Products.read()
+            (imploeers, providers, saleres,
+             daysale, productype, product) = (self.db.Employees.read(), self.db.Providers.read(), self.db.ResultSales.read(),
+                                              self.db.DailySales.read(), self.db.ProductTypes.read(), self.db.Products.read())
             #if error is not None:
             #    self.ui.tabWidget.setEnabled(False)
             #    self.show_error_message(self, error)
